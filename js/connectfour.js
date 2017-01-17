@@ -37,37 +37,86 @@ function setup()
 function checked()
 {
   //Check wether if any player won
-  rowcounter=1;
-  for(i=6;i>0;i--)
+  won=0;
+  col=-1;
+  row=-1;
+  for(j=0;j<6;j++)
   {
-    colcounter=1;
-    for(j=5;j>0;j--)
+    for(i=6;i>2;i--)
     {
-      //Check for Row
-      if((filled[i][j]==filled[i][j-1])&& filled[i][j]!=0)
-      colcounter++;
-      if((filled[i][j]==filled[i-1][j])&&filled[i][j]!=0)
-      rowcounter++;
-      if(rowcounter==4)
+      if(filled[i][j]==filled[i-1][j] && filled[i-1][j]==filled[i-2][j] && filled[i-2][j]==filled[i-3][j] && filled[i][j]!=0)
       {
-        console.log("Row Win");
-        noLoop();
+        won=1;
+        row=j;
+        break;
       }
-      if(colcounter==4)
-      {
-        console.log("Column Win");
-        noLoop();
-      }
-      rowcounter=1;
-      }
+    }
+
   }
+
+  //Check Verically
+  if(won==0)
+  {
+  for(i=0;i<7;i++)
+  {
+    for(j=5;j>2;j--)
+    {
+      if(filled[i][j]==filled[i][j-1] && filled[i][j-1]==filled[i][j-2] && filled[i][j-2]==filled[i][j-3] && filled[i][j]!=0)
+      {won=1;col=i;break;}
+    }
+  }
+}
+//Check Diagonally left down to right high
+if(won==0)
+{
+for(i=0;i<4;i++)
+{
+  for(j=5;j>2;j--)
+  {
+    if(filled[i][j]==filled[i+1][j-1] && filled[i+1][j-1]==filled[i+2][j-2] && filled[i+2][j-2]==filled[i+3][j-3] && filled[i][j]!=0)
+    {
+      won=1;
+      break;
+    }
+  }
+}
+}
+//Check Diagonally left up to right down
+if(won==0)
+{
+  for(i=0;i<4;i++)
+  {
+    for(j=0;j<3;j++)
+    {
+      if(filled[i][j]==filled[i+1][j+1] && filled[i+1][j+1]==filled[i+2][j+2] && filled[i+2][j+2]==filled[i+3][j+3] && filled[i][j]!=0)
+      {
+        won=1;
+        break;
+      }
+    }
+  }
+
+}
+
+  if(won==1)
+  {
+
+    if(player==1)
+    console.log("Player 2 Won");
+    else {
+      console.log("Player 1 Won");
+    }
+    noLoop();
+   }
 }
 function draw()
 {
   background(51);
-  checked();
   for(i=0;i<clicked;i++)
-  c[i].show();
+  {
+    c[i].show();
+  }
+  checked();
   b.show();
 }
 function Create2DArray(row,col)
@@ -131,5 +180,4 @@ function mouseClicked()
   c[clicked].x=((cas)*width/7+((cas+1)*width/7))/2;
   c[clicked++].y=floorofrow(row);
   }
-
 }
