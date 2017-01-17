@@ -100,11 +100,13 @@ if(won==0)
 
   if(won==1)
   {
-
+    background(51);
+    textSize(32);
+    fill(0, 102, 153);
     if(player==1)
-    console.log("Player 2 Won");
+    text("Player 2 Won!!",width/2,height/2);
     else {
-      console.log("Player 1 Won");
+      text("Player 1 Won!!",width/2,height/2);
     }
     noLoop();
    }
@@ -116,8 +118,8 @@ function draw()
   {
     c[i].show();
   }
-  checked();
   b.show();
+  checked();
 }
 function Create2DArray(row,col)
 {
