@@ -34,6 +34,76 @@ function setup()
     }
     initfilled();
 }
+function getAIRow(p)
+{
+  //p is for which player i neeed to get it
+  row=-1
+  //For Horizontal
+
+  for(i=5;i>=0;i--)
+  {
+
+    //Check for the current row
+    for(j=0;j<4;j++)
+    {
+      if(filled[j][i]==filled[j+1][i] && filled[j+1][i]==filled[j+2][i] && filled[j+3][i]==0 && filled[j][i]==p)
+      {
+        row=j+3;
+        break;
+      }
+    }
+  }
+  //For Vertical
+  if(row==-1)
+  {
+    for(j=0;j<7;j++)
+    {
+
+      //Take a Column and Check
+      for(i=5;i>2;i--)
+      {
+        if(filled[j][i]==filled[j][i-1] && filled[j][i-1]==filled[j][i-2] && filled[j][i-3]==0 && filled[j][i]==p)
+        {
+          row=j;
+          break;
+        }
+      }
+    }
+  }
+  //For  Diagonally
+  if(row==-1)
+  {
+    //For Left Down Right UP
+    for(i=5;i>2;i--)
+    {
+      for(j=0;j<4;j++)
+      {
+        if(filled[j][i]==p && filled[j][i]==filled[j+1][i-1] && filled[j+1][i-1]==filled[j+2][i-2] && filled[j+3][i-3]==0)
+        {
+          row=j+3;
+          break;
+        }
+      }
+    }
+    //For Left UP Right down
+    for(i=0;i<3;i++)
+    {
+      for(j=0;j<4;j++)
+      {
+        if(filled[j][i]==p && filled[j][i]==filled[j+1][i+1] && filled[j+1][i+1]==filled[j+2][i+2] && filled[j+3][i+3]==0)
+        {
+          row=j+3;
+          break;
+        }
+      }
+    }
+
+  }
+
+  return row;
+}
+
+
 function checked()
 {
   //Check wether if any player won
@@ -47,7 +117,7 @@ function checked()
       if(filled[i][j]==filled[i-1][j] && filled[i-1][j]==filled[i-2][j] && filled[i-2][j]==filled[i-3][j] && filled[i][j]!=0)
       {
         won=1;
-        row=j;
+        player=filled[i][j];
         break;
       }
     }
@@ -62,7 +132,11 @@ function checked()
     for(j=5;j>2;j--)
     {
       if(filled[i][j]==filled[i][j-1] && filled[i][j-1]==filled[i][j-2] && filled[i][j-2]==filled[i][j-3] && filled[i][j]!=0)
-      {won=1;col=i;break;}
+      {
+        won=1;
+        player=filled[i][j];
+        break;
+      }
     }
   }
 }
@@ -76,6 +150,7 @@ for(i=0;i<4;i++)
     if(filled[i][j]==filled[i+1][j-1] && filled[i+1][j-1]==filled[i+2][j-2] && filled[i+2][j-2]==filled[i+3][j-3] && filled[i][j]!=0)
     {
       won=1;
+      player=filled[i][j];
       break;
     }
   }
@@ -91,6 +166,7 @@ if(won==0)
       if(filled[i][j]==filled[i+1][j+1] && filled[i+1][j+1]==filled[i+2][j+2] && filled[i+2][j+2]==filled[i+3][j+3] && filled[i][j]!=0)
       {
         won=1;
+        player=filled[i][j];
         break;
       }
     }
@@ -100,13 +176,13 @@ if(won==0)
 
   if(won==1)
   {
-    background(51);
+  //  background(51);
     textSize(32);
     fill(0, 102, 153);
     if(player==1)
-    text("Player 2 Won!!",width/2,height/2);
+    text("Player 1 Won!",width/2,height/2);
     else {
-      text("Player 1 Won!!",width/2,height/2);
+      text("CPU  Won!!",width/2,height/2);
     }
     noLoop();
    }
@@ -119,6 +195,7 @@ function draw()
     c[i].show();
   }
   b.show();
+  AI();
   checked();
 }
 function Create2DArray(row,col)
@@ -167,19 +244,48 @@ if(filled[row][5]==0)
 asa=height-height/10;
 for(i=5;i>cas;i--)
 asa-=(height/7)+10;
-if(player==1)
-player=2;
-else {
-  player=1;
-}
   return asa;
 }
 function mouseClicked()
 {
+  if(player==1){
   row=getrow(mouseX)
+  getPostion(row);
+  player=2;
+}
+}
+function getPostion(row)
+{
   if(filled[row][0]==0)
   {
   c[clicked].x=((cas)*width/7+((cas+1)*width/7))/2;
   c[clicked++].y=floorofrow(row);
+  }
+}
+function randomIntFromInterval(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+function AI()
+{
+  if(player==2)
+  {
+    row=-1;
+
+    //Check if it can win
+    row=getAIRow(2);
+    //Block the Player 1 Winning Postion
+    if(row==-1)
+    row=getAIRow(1);
+
+    //Get a Random postion and draw it
+    if(row==-1)
+    row=randomIntFromInterval(0,6);
+
+    console.log(row);
+    //Call To Get Postion where it need to be drawn and draw it
+    cas=row;
+    getPostion(row);
+    player=1;
   }
 }
