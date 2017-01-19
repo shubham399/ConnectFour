@@ -46,9 +46,28 @@ function getAIRow(p)
     //Check for the current row
     for(j=0;j<4;j++)
     {
+      //To Right Most
       if(filled[j][i]==filled[j+1][i] && filled[j+1][i]==filled[j+2][i] && filled[j+3][i]==0 && filled[j][i]==p)
       {
         row=j+3;
+        break;
+      }
+      //To Left Most
+      if(filled[j][i]==0 && filled[j+1][i]==p && filled[j+1][i]==filled[j+2][i] && filled[j+2][i]==filled[j+3][i])
+      {
+        row=j;
+        break;
+      }
+      //To Second from Left
+      if(filled[j][i]==filled[j+2][i] && filled[j+2][i]==filled[j+3][i] && filled[j+1][i]==0 && filled[j][i]==p)
+      {
+        row=j+1;
+        break;
+      }
+      //To Second from Right
+      if(filled[j][i]==filled[j+1][i] && filled[j+1][i]==filled[j+3][i] && filled[j+2][i]==0 && filled[j][i]==p)
+      {
+        row=j+2;
         break;
       }
     }
@@ -78,9 +97,28 @@ function getAIRow(p)
     {
       for(j=0;j<4;j++)
       {
+        //Right Most is empty
         if(filled[j][i]==p && filled[j][i]==filled[j+1][i-1] && filled[j+1][i-1]==filled[j+2][i-2] && filled[j+3][i-3]==0)
         {
           row=j+3;
+          break;
+        }
+        //Left most is empty
+        if(filled[j+1][i-1]==p && filled[j][i]==0 && filled[j+1][i-1]==filled[j+2][i-2] && filled[j+2][i-2]==filled[j+3][i-3])
+        {
+          row=j;
+          break;
+        }
+        //Second from Left is empty
+        if(filled[j][i]==p && filled[j+1][i-1]==0 && filled[j][i]==filled[j+2][i-2] && filled[j+2][i-2]==filled[j+3][i-3])
+        {
+          row=j+1;
+          break;
+        }
+        //Second from Right is empty
+        if(filled[j][i]==p && filled[j+2][i-2]==0 && filled[j][i]==filled[j+1][i-1] && filled[j+1][i-1]== filled[j+3][i-3])
+        {
+          row=j+2;
           break;
         }
       }
@@ -90,9 +128,28 @@ function getAIRow(p)
     {
       for(j=0;j<4;j++)
       {
+        //Right most is empty
         if(filled[j][i]==p && filled[j][i]==filled[j+1][i+1] && filled[j+1][i+1]==filled[j+2][i+2] && filled[j+3][i+3]==0)
         {
           row=j+3;
+          break;
+        }
+        //Left most is empty
+        if(filled[j][i]==0  && filled[j+1][i+1]==filled[j+2][i+2] && filled[j+2][i+2]==filled[j+3][i+3] && filled[j+1][i+1]==p)
+        {
+          row=j;
+          break;
+        }
+        //Second to Left is empty
+        if(filled[j][i]==p && filled[j+1][i+1]==0 && filled[j][i]==filled[j+2][i+2] && filled[j+2][i+2]==filled[j+3][i+3])
+        {
+          row=j+1;
+          break;
+        }
+        //Second from Right is empty
+        if(filled[j][i]==p && filled[j+2][i+2]==0 && filled[j][i]==filled[j+1][i+1] && filled[j+1][i+1]==filled[j+3][i+3])
+        {
+          row=j+2;
           break;
         }
       }
@@ -176,7 +233,7 @@ if(won==0)
 
   if(won==1)
   {
-  //  background(51);
+    //background(51);
     textSize(32);
     fill(0, 102, 153);
     if(player==1)
@@ -195,8 +252,8 @@ function draw()
     c[i].show();
   }
   b.show();
-  AI();
   checked();
+  AI();
 }
 function Create2DArray(row,col)
 {
@@ -277,12 +334,9 @@ function AI()
     //Block the Player 1 Winning Postion
     if(row==-1)
     row=getAIRow(1);
-
     //Get a Random postion and draw it
     if(row==-1)
     row=randomIntFromInterval(0,6);
-
-    console.log(row);
     //Call To Get Postion where it need to be drawn and draw it
     cas=row;
     getPostion(row);
