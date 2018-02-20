@@ -1,2 +1,0 @@
-# Redirect domain aliases to primary domain
-http://test.connectfour.cf/* http://connectfour.cf/:splat 301!
